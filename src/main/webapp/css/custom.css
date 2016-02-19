@@ -1,0 +1,181 @@
+body {
+	padding-top: 60px;
+}
+
+ng-hide {
+	display: none;
+}
+
+.loader {
+	font-size: 36px;
+	line-height: 36px;
+	font-weight: bold;
+	width: 200px;
+	height: 36px;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.colorselector{
+	padding:0px;
+	width:140px;
+	height:30px;
+}
+
+.form-control.penThick{
+	width: 140px;
+	height: 25px;
+}
+
+
+.file-upload {
+	position: relative;
+	overflow: hidden;
+	background: #eee;
+	border-top: 1px solid #ccc;
+	font-size: 30px;
+	line-height: 1;
+	text-align: center;
+	padding: 20px;
+	width: 1000px;
+}
+
+.file-upload input[type=file] {
+	position: absolute;
+	top: 0; right: 0;
+	font-size: 200px;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	cursor: pointer;
+}
+.btn.btn-info.sideButton ,.btn.btn-danger.sideButton ,.btn.btn-warning.sideButton {
+	width: 140px;
+	margin-top: 10px;
+}
+.btn.btn-primary.drawButton, .btn.btn-success.drawButton{
+	width: 293px;
+	margin-top: 10px;
+}
+.row.color{
+	margin-left:3px;
+	margin-right: 15px;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+.row.pen{
+	margin-left:1px;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+.row.penLable{
+	width: 140px;
+	margin-left:3px;
+}
+.container-fluid{
+	margin-left: 100px;
+}
+.page-header{
+	margin-left: 100px;
+}
+
+textarea, memory-cell {
+	font-family: Consolas, monospace;
+	margin: 0;
+	padding: 0;
+}
+
+/*.panel-body{
+    height: 300px;
+}*/
+.clearfix{
+	width: 1000px;
+	height: 245px;
+	overflow: auto;
+}
+.panel {
+	border:1px solid #ddd;
+	margin-top:10px;
+}
+.panel .panel-body {
+	padding:7px;
+}
+
+.panel .navbar .brand {
+	font-size: 18px;
+}
+.panel .navbar .brand,
+.panel .navbar .text {
+	padding:7px 14px 7px;
+}
+
+.panel .navbar .brand i {
+	vertical-align:baseline;
+}
+
+.panel .navbar-static-top .navbar-inner{
+	min-height:0;
+}
+
+.panel:target {
+	border-color:gold;
+	outline:solid 2px gold;
+}
+
+#memory .memory-cell {
+	float:left;
+	padding:7px;
+	width:40px;
+	text-align:center;
+	border:solid 1px #ccc;
+	margin-top:-1px;
+	margin-left:-1px;
+}
+
+#memory .memory-cell[current=true]{
+	background:#468847;
+	color:#fff;
+}
+
+#input, #output {
+	font-size: 30pt;
+	min-height: 50px;
+	padding-top:14px;
+}
+
+#txtCode {
+	width: 100%;
+	max-width: 100%;
+	min-height: 100%;
+	padding: 0;
+	border: 0;
+	min-height: 150px;
+	font-size: 22pt;
+	box-shadow:none;
+	line-height:130%;
+}
+
+#txtCode[disabled] {
+	background: #fff;
+}
+
+#txtCode:focus {
+	box-shadow: none;
+	outline: none;
+}
+
+
+.demo-block{
+	background-color:gray;
+	color:white;
+	height:150px;
+	width: 150px;
+	line-height:150px;
+	font-size:60px;
+	margin-bottom:10px
+}
