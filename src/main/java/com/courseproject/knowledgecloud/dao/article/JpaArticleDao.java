@@ -35,9 +35,18 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
 
     @Override
     @Transactional(readOnly = true)
+    public Article save(Article article){
+        User user = DataBaseInitializer.userDao.findByName(UserResource.currentUser);
+        article.setUser(user);
+        return article;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Article> findAll(){
-        final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+       // final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
+        //final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
 
         User user = DataBaseInitializer.userDao.findByName(UserResource.currentUser);
 

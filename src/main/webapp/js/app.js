@@ -137,6 +137,17 @@ function ProfileController($scope, $rootScope, $location, $cookieStore, CodeServ
 };
 
 function CreateController($scope, $rootScope, $location, $cookieStore, CodeService) {
+	$scope.article = new CodeService();
+	$scope.saveart = function() {
+		delete $scope.article.id;
+		var arr = new Array();
+		arr.push($scope.article.topics);
+		$scope.article.topics = arr;
+		$scope.article.$save(function() {
+			$location.path('/');
+			$scope.codes = CodeService.query();
+		});
+	};
 
 };
 
@@ -358,6 +369,6 @@ services.factory('UserService', function($resource) {
 
 services.factory('CodeService', function($resource) {
 
-	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content'});
+	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content', topics: "@topics"});
 });
 
