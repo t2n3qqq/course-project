@@ -62,46 +62,57 @@ public class DataBaseInitializer
 		adminUser.addRole("admin");
 		adminUser.addRole("user");
 
-		User user = new User("test", this.passwordEncoder.encode("test"), badges);
-		adminUser.addRole("admin");
-		adminUser.addRole("user");
+//		User user = new User("test", this.passwordEncoder.encode("test"), badges);
+//		adminUser.addRole("admin");
+//		adminUser.addRole("user");
 
 		//this.userDao.save(adminUser);
 
 		Article article = new Article("Art_1", "TEST CONTETNT 1");
 		Article article1 = new Article("Art_2", "TEST CONTETNT 2");
-		Article article2 = new Article("Art_3", "TEST CONTETNT 3");
+//		Article article2 = new Article("Art_3", "TEST CONTETNT 3");
 
-		article.setUser(adminUser);article1.setUser(adminUser);article2.setUser(user);
+		article.setUser(adminUser);//article1.setUser(adminUser);//article2.setUser(user);
 
 		CommentTable commentTable = new CommentTable("TEST COMMENT 1");
 		CommentTable commentTable1 = new CommentTable("TEST COMMENT 2");
 		CommentTable commentTable2= new CommentTable("TEST COMMENT 3");
-		commentTable.setArticle(article);commentTable1.setArticle(article);commentTable2.setArticle(article2);
+		commentTable.setArticle(article);//commentTable1.setArticle(article);//commentTable2.setArticle(article2);
 		Set<CommentTable> commentTables = new HashSet<CommentTable>();
 		Set<CommentTable> commentTables1 = new HashSet<CommentTable>();
 		commentTables.add(commentTable);commentTables.add(commentTable1);
 		commentTables1.add(commentTable2);
 
 		article.setCommentTables(commentTables);
-		article2.setCommentTables(commentTables1);
+		article1.setCommentTables(commentTables1);
 
 		Topic topic1 = new Topic();
 		Topic topic2 = new Topic();
 		topic1.setName("CHEMISTRY");
 		topic2.setName("PHYSICS");
 		Set<Topic> topics = new HashSet<Topic>();
+		Set<Topic> topics1 = new HashSet<Topic>();
+		Set<Topic> topics2 = new HashSet<Topic>();
 		topics.add(topic1);
 		topics.add(topic2);
+		topics1.add(topic1);
+		topics2.add(topic2);
 
 		article.setTopics(topics);
+	//	article1.setTopics(topics1);
+//		article2.setTopics(topics2);
 
 		Set<Article> articles = new HashSet<Article>();
+	//	Set<Article> articles1 = new HashSet<Article>();
 		articles.add(article);
+	//	articles.add(article1);
+	//	articles1.add(article2);
 		adminUser.setArticles(articles);
+	//	user.setArticles(articles1);
 		//adminUser.getArticles().add(article);
 		//this.articleDao.save(article);
 		this.userDao.save(adminUser);
+//		this.userDao.save(user);
 		//this.articleDao.save(article);
 
 		//this.userDao.save(adminUser);

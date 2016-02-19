@@ -6,6 +6,21 @@ var app = angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.serv
 				templateUrl: 'partials/login.html',
 				controller: LoginController
 			});
+
+			$routeProvider.when('/article', {
+				templateUrl: 'partials/article.html',
+				controller: ArticleController
+			});
+
+			$routeProvider.when('/profile', {
+				templateUrl: 'partials/profile.html',
+				controller: ProfileController
+			});
+
+			$routeProvider.when('/create', {
+				templateUrl: 'partials/create.html',
+				controller: CreateController
+			});
 			
 			$routeProvider.otherwise({
 				templateUrl: 'partials/index.html',
@@ -86,6 +101,12 @@ var app = angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.serv
 			$cookieStore.remove('authToken');
 			$location.path("/login");
 		};
+		$rootScope.editprofile = function() {
+			$location.path("/profile");
+		};
+		$rootScope.createart = function() {
+			$location.path("/create");
+		};
 		
 		 /* Try getting valid user from cookie or go to login page */
 		var originalPath = $location.path();
@@ -102,6 +123,22 @@ var app = angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.serv
 		$rootScope.initialized = true;
 	});
 
+
+function ArticleController($scope, $rootScope, $location, $cookieStore, CodeService) {
+
+	$scope.articles = CodeService.query();
+	$scope.article = new CodeService();
+
+
+};
+
+function ProfileController($scope, $rootScope, $location, $cookieStore, CodeService) {
+
+};
+
+function CreateController($scope, $rootScope, $location, $cookieStore, CodeService) {
+
+};
 
 
 function LoginController($scope, $rootScope, $location, $cookieStore, UserService) {
@@ -139,6 +176,11 @@ function LoginController($scope, $rootScope, $location, $cookieStore, UserServic
 function IndexController($scope, $rootScope, $location, CodeService) {
 	$scope.articles = CodeService.query();
 	$scope.article = new CodeService();
+
+	$scope.showArt = function () {
+		$location.path("/article");
+	};
+
 	//$scope.code.userId = $rootScope.user.name;
 	//$scope.code.content = $scope.codeInput;
 	$scope.save = function(codeTitle) {
