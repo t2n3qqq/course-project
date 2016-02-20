@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface ArticleDao extends Dao<Article, Integer> {
     Article assambleArticle (Article article, List<String> topicslist, List<String> tagslist);
+    List<Article> findAllforUser();
 }

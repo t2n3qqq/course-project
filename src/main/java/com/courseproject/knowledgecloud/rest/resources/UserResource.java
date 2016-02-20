@@ -104,6 +104,8 @@ public class UserResource
 		User userUser = new User(username, passwordEncoder.encode(password));
 		userUser.addRole("user");
 		userUser.addRole("admin");
+		userUser.setLanguage("eng");
+		userUser.setTheme("light");
 		userDao.save(userUser);
 
 

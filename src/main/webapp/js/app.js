@@ -377,3 +377,13 @@ services.factory('CodeService', function($resource) {
 	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist", tagslist: "@tagslist"});
 });
 
+
+//services.factory('CodeService', function($resource) {
+//
+//	return $resource('rest/news/:id', {
+//			getallarticles:{id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist", tagslist: "@tagslist"},
+//			getuserarticles:{method:'POST',patams: {'action' : 'getuserarticles'}}
+//
+//	});
+//});
+

@@ -30,10 +30,10 @@ public class User implements Entity, UserDetails, Serializable
 	@Column(length = 80, nullable = false)
 	private String password;
 
-	@Column(unique = true, length = 16, nullable = false)
+	@Column(unique = false, length = 16, nullable = false)
 	private String language;
 
-	@Column(unique = true, length = 16, nullable = false)
+	@Column(unique = false, length = 16, nullable = false)
 	private String theme;
 
 	@ElementCollection(fetch = FetchType.EAGER)

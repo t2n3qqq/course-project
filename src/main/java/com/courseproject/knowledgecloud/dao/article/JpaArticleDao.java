@@ -56,10 +56,25 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
         return article;
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public List<Article> findAll(){
+        final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
+        final CriteriaQuery<Article> criteriaQuery = builder.createQuery(Article.class);
+
+        Root<Article> root = criteriaQuery.from(Article.class);
+        criteriaQuery.select(root);//.where(builder.equal(root.get("userId"), UserResource.currentUser));
+        criteriaQuery.orderBy(builder.desc(root.get("date")));
+
+        TypedQuery<Article> typedQuery = this.getEntityManager().createQuery(criteriaQuery);
+        return typedQuery.getResultList();
+    }
+
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Article> findAllforUser(){
        // final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
         //final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
 
