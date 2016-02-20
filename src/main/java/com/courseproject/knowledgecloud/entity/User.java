@@ -30,6 +30,12 @@ public class User implements Entity, UserDetails, Serializable
 	@Column(length = 80, nullable = false)
 	private String password;
 
+	@Column(unique = true, length = 16, nullable = false)
+	private String language;
+
+	@Column(unique = true, length = 16, nullable = false)
+	private String theme;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> roles = new HashSet<String>();
 
@@ -186,4 +192,19 @@ public class User implements Entity, UserDetails, Serializable
 		return true;
 	}
 
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
 }

@@ -1,6 +1,7 @@
 package com.courseproject.knowledgecloud.dao;
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +62,8 @@ public class DataBaseInitializer
 		User adminUser = new User("admin", this.passwordEncoder.encode("admin"), badges);
 		adminUser.addRole("admin");
 		adminUser.addRole("user");
+		adminUser.setTheme("light");
+		adminUser.setLanguage("eng");
 
 //		User user = new User("test", this.passwordEncoder.encode("test"), badges);
 //		adminUser.addRole("admin");
@@ -90,6 +93,13 @@ public class DataBaseInitializer
 		Topic topic2 = new Topic();
 		topic1.setName("CHEMISTRY");
 		topic2.setName("PHYSICS");
+		Tag tag1 = new Tag();
+		Tag tag2 = new Tag();
+		tag1.setName("SWAG");
+		tag2.setName("BITCH");
+		Set<Tag> tags = new HashSet<Tag>();
+		tags.add(tag1);tags.add(tag2);
+
 		Set<Topic> topics = new HashSet<Topic>();
 		Set<Topic> topics1 = new HashSet<Topic>();
 		Set<Topic> topics2 = new HashSet<Topic>();
@@ -99,6 +109,8 @@ public class DataBaseInitializer
 		topics2.add(topic2);
 
 		article.setTopics(topics);
+		article.setTags(tags);
+		article.setDate(new Date(System.currentTimeMillis()));
 	//	article1.setTopics(topics1);
 //		article2.setTopics(topics2);
 
