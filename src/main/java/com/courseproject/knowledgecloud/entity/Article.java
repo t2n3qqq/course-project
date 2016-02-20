@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -70,6 +71,7 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     }
 
     @JsonIgnore
+    //@Column(nullable = true)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "article")//(fetch = FetchType.LAZY, mappedBy = "user")
     //@JoinColumn(name = "COMMENT_ID")
     public Set<CommentTable> getCommentTables() {
@@ -104,6 +106,9 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     public void setTopics(Set<Topic> topics){
         this.topics = topics;
     }
+
+    @Transient
+    public List<String> topicslist;
 
     @Override
     public String toString(){

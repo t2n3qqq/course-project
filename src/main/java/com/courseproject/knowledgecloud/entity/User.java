@@ -40,8 +40,8 @@ public class User implements Entity, UserDetails, Serializable
 					nullable = false, updatable = false) })
 	private Set<Badge> badges = new HashSet<Badge>(0);
 
-	@OneToMany(cascade = CascadeType.ALL)//(fetch = FetchType.LAZY, mappedBy = "user")
-	@JoinColumn(name = "ARTICLE_ID")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")//(fetch = FetchType.LAZY, mappedBy = "user")
+	//@JoinColumn(name = "ARTICLE_ID")
 	private Set<Article> articles = new HashSet<Article>(0);
 
 	public User()

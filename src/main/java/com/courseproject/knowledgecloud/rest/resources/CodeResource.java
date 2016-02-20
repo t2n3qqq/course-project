@@ -1,7 +1,9 @@
 package com.courseproject.knowledgecloud.rest.resources;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -17,8 +19,13 @@ import javax.ws.rs.core.MediaType;
 import com.courseproject.knowledgecloud.JsonViews;
 
 
+import com.courseproject.knowledgecloud.dao.DataBaseInitializer;
 import com.courseproject.knowledgecloud.dao.article.ArticleDao;
+import com.courseproject.knowledgecloud.dao.topic.JpaTopicDao;
+import com.courseproject.knowledgecloud.dao.topic.TopicDao;
+import com.courseproject.knowledgecloud.dao.user.UserDao;
 import com.courseproject.knowledgecloud.entity.Article;
+import com.courseproject.knowledgecloud.entity.Topic;
 import com.courseproject.knowledgecloud.entity.User;
 import com.owlike.genson.Genson;
 import org.codehaus.jackson.JsonGenerationException;
@@ -44,6 +51,12 @@ public class CodeResource
 
     @Autowired
     private ArticleDao articleDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private TopicDao topicDao;
 
     @Autowired
     private ObjectMapper mapper;
@@ -88,10 +101,8 @@ public class CodeResource
     @Consumes(MediaType.APPLICATION_JSON)
     public Article create(Article article)
     {
-
         this.logger.info("create(): " + article);
-
-        return this.articleDao.save(article);
+        return articleDao.assambleArticle(article, article.topicslist);
     }
 
 

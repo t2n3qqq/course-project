@@ -3,9 +3,8 @@ package com.courseproject.knowledgecloud.dao.article;
 import com.courseproject.knowledgecloud.dao.DataBaseInitializer;
 import com.courseproject.knowledgecloud.dao.user.JpaUserDao;
 import com.courseproject.knowledgecloud.dao.user.UserDao;
-import com.courseproject.knowledgecloud.entity.Article;
+import com.courseproject.knowledgecloud.entity.*;
 import com.courseproject.knowledgecloud.dao.JpaDao;
-import com.courseproject.knowledgecloud.entity.User;
 import com.courseproject.knowledgecloud.rest.resources.UserResource;
 import com.courseproject.knowledgecloud.transfer.UserTransfer;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,8 +23,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transaction;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by qqq on 2/11/2016.
@@ -34,10 +36,18 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
     JpaArticleDao(){super(Article.class);}
 
     @Override
-    @Transactional(readOnly = true)
-    public Article save(Article article){
+    @Transactional//(readOnly = true)
+    public Article assambleArticle(Article article, List<String> topicslist){
+
+        Set<Topic> topics = new HashSet<Topic>();
+        for(String topic : topicslist){
+            Topic newtopic = DataBaseInitializer.topicDao.findByName(topic);
+            topics.add(newtopic);
+        }
         User user = DataBaseInitializer.userDao.findByName(UserResource.currentUser);
+        article.setTopics(topics);
         article.setUser(user);
+        DataBaseInitializer.articleDao.save(article);
         return article;
     }
 
