@@ -24,10 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transaction;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by qqq on 2/11/2016.
@@ -37,16 +34,24 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
 
     @Override
     @Transactional//(readOnly = true)
-    public Article assambleArticle(Article article, List<String> topicslist){
+    public Article assambleArticle(Article article, List<String> topicslist, List<String> tagslist){
 
         Set<Topic> topics = new HashSet<Topic>();
         for(String topic : topicslist){
             Topic newtopic = DataBaseInitializer.topicDao.findByName(topic);
             topics.add(newtopic);
         }
+        Set<Tag> tags = new HashSet<Tag>();
+        for(String tag : tagslist){
+            Tag newtag = DataBaseInitializer.tagDao.findByName(tag);
+            tags.add(newtag);
+        }
+
         User user = DataBaseInitializer.userDao.findByName(UserResource.currentUser);
         article.setTopics(topics);
+        article.setTags(tags);
         article.setUser(user);
+        article.setDate(new Date(System.currentTimeMillis()));
         DataBaseInitializer.articleDao.save(article);
         return article;
     }

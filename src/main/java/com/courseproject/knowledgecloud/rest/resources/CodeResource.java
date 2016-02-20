@@ -102,7 +102,7 @@ public class CodeResource
     public Article create(Article article)
     {
         this.logger.info("create(): " + article);
-        return articleDao.assambleArticle(article, article.topicslist);
+        return articleDao.assambleArticle(article, article.topicslist, article.tagslist);
     }
 
 

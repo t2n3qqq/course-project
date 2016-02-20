@@ -141,10 +141,13 @@ function CreateController($scope, $rootScope, $location, $cookieStore, CodeServi
 	$scope.saveart = function() {
 		debugger;
 		delete $scope.article.id;
-		var arr = new Array();
-		arr.push($scope.article.topics);
-		delete $scope.article.topics;
-		$scope.article.topicslist = arr;
+		var topics = new Array();
+		topics.push($scope.article.topics);
+		var tags = new Array();
+		tags.push($scope.article.tags);
+		//delete $scope.article.topics;
+		$scope.article.topicslist = topics;
+		$scope.article.tagslist = tags;
 		$scope.article.$save(function() {
 			$location.path('/');
 			$scope.codes = CodeService.query();
@@ -371,6 +374,6 @@ services.factory('UserService', function($resource) {
 
 services.factory('CodeService', function($resource) {
 
-	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist"});
+	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist", tagslist: "@tagslist"});
 });
 

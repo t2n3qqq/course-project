@@ -70,15 +70,18 @@
 	</bean>
 	<bean id="topicDao" class="com.courseproject.knowledgecloud.dao.topic.JpaTopicDao">
 	</bean>
+	<bean id="tagDao" class="com.courseproject.knowledgecloud.dao.tag.JpaTagDao">
+	</bean>
 
 
 
 
 
-	<!--<bean id="dataBaseInitializer" class="com.courseproject.knowledgecloud.dao.DataBaseInitializer" >-->
-	<bean id="dataBaseInitializer" class="com.courseproject.knowledgecloud.dao.DataBaseInitializer" init-method="initDataBase">
+	<bean id="dataBaseInitializer" class="com.courseproject.knowledgecloud.dao.DataBaseInitializer" >
+	<!--<bean id="dataBaseInitializer" class="com.courseproject.knowledgecloud.dao.DataBaseInitializer" init-method="initDataBase">-->
 	<!--init-method="initDataBase">-->
 
+		<constructor-arg ref="tagDao" />
 		<constructor-arg ref="userDao" />
 		<constructor-arg ref="badgeDao" />
 		<constructor-arg ref="articleDao" />

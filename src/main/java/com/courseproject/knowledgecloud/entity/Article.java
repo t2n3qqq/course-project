@@ -124,6 +124,9 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     @Transient
     public List<String> topicslist;
 
+    @Transient
+    public List<String> tagslist;
+
     @Override
     public String toString(){
         return String.format("Article[%d,%s,%s]", this.articleId, this.name, this.content);

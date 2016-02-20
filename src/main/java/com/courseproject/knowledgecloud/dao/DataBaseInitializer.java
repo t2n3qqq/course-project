@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.courseproject.knowledgecloud.dao.article.ArticleDao;
+import com.courseproject.knowledgecloud.dao.tag.TagDao;
 import com.courseproject.knowledgecloud.entity.*;
 import com.courseproject.knowledgecloud.dao.badge.BadgeDao;
 import com.courseproject.knowledgecloud.dao.comment.CommentDao;
@@ -30,6 +31,8 @@ public class DataBaseInitializer
 
 	public static TopicDao topicDao;
 
+	public static TagDao tagDao;
+
 
 	protected DataBaseInitializer()
 	{
@@ -39,9 +42,10 @@ public class DataBaseInitializer
 
 	public DataBaseInitializer(UserDao userDao, PasswordEncoder passwordEncoder,
 							   BadgeDao badgeDao, ArticleDao articleDao, CommentDao commentDao
-								, TopicDao topicDao)
+								, TopicDao topicDao, TagDao tagDao)
 //			, AuthorDao authorDao, StockDao stockDao, CategoryDao categoryDao)
 	{
+		this.tagDao = tagDao;
 		this.topicDao = topicDao;
 		this.commentDao = commentDao;
 		this.articleDao = articleDao;
