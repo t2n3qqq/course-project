@@ -1,30 +1,62 @@
 
 <div class="container-fluid">
-	<div class="row" >
-		<div class="col-md-3">
 
+	<div class="navbar-header" ng-show="user">
+	<a class="navbar-brand" href="" ng-click="showmyarts()">Show my articles</a>
+	</div>
 
-			<div ng-repeat="article in articles">
-
-				<hr />
-				<a class="btn btn-default"  role="button" ng-click="showArt()">{{article.name}}</a>
-				<!--<a>{{article.name}}</a>-->
-				<h4>{{article.content}}</h4>
-
-
+	<div id="templatemo_body_wrapper">
+		<div id="templatemo_wrapper">
+			<div id="templatemo_main">
+				<div id="templatemo_content">
+					<div class="post_box" ng-repeat="article in articles">
+						<h2><a href="" ng-click="showArt(article)">{{article.name}}</a></h2>
+						<div class="news_meta">Posted by <a href="#">{{article.thisuser}}</a>, Posted on <a href="#">{{article.topicslist}}</a>, {{article.date | date}} | Tags: <a href="#">{{article.tagslist}}</a></div>
+						<div class="image_wrapper"><a target="_parent"><img ng-src="{{article.imgurl}}"></a></div>
+						<p align="justify">{{article.content.substring(0,400)}}</p>
+						<div class="cleaner"></div>
+					</div>
+				</div>
 			</div>
-
-
+			<div class="cleaner"></div>
 		</div>
 
 
+	<!--<div class="navbar-header" ng-show="user">-->
+		<!--<a class="navbar-brand" href="" ng-click="showmyarts()">Show my articles</a>-->
+	<!--</div>-->
+	<!--<hr />-->
+
+	<!--<div class="row" >-->
+		<!--<div class="col-md-3">-->
+
+
+			<!--<div ng-repeat="article in articles">-->
+
+				<!--<hr />-->
+				<!--<a class="btn btn-default"  role="button" ng-click="showArt(article)">{{article.name}}</a>-->
+				<!--&lt;!&ndash;<a>{{article.name}}</a>&ndash;&gt;-->
+				<!--<h4>{{article.content}}</h4>-->
+				<!--<h4>{{article.thisuser}}</h4>-->
+				<!--<h4>{{article.date | date}}</h4>-->
+				<!--<h4>{{article.topicslist}}</h4>-->
+				<!--<h4>{{article.tagslist}}</h4>-->
+				<!--<h4>{{article.vote}}</h4>-->
+
+
+			<!--</div>-->
+
+
+		<!--</div>-->
+		<!--<a class="btn btn-default"  role="button" ng-click="press()">press</a>-->
 
 
 
-	</div>
+
+	<!--</div>-->
 
 </div>
 
 
 
-<hr />
+<hr>

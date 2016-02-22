@@ -43,7 +43,6 @@ public class DataBaseInitializer
 	public DataBaseInitializer(UserDao userDao, PasswordEncoder passwordEncoder,
 							   BadgeDao badgeDao, ArticleDao articleDao, CommentDao commentDao
 								, TopicDao topicDao, TagDao tagDao)
-//			, AuthorDao authorDao, StockDao stockDao, CategoryDao categoryDao)
 	{
 		this.tagDao = tagDao;
 		this.topicDao = topicDao;
@@ -81,17 +80,23 @@ public class DataBaseInitializer
 
 		article.setUser(adminUser);//article1.setUser(adminUser);//article2.setUser(user);
 
-		CommentTable commentTable = new CommentTable("TEST COMMENT 1");
-		CommentTable commentTable1 = new CommentTable("TEST COMMENT 2");
-		CommentTable commentTable2= new CommentTable("TEST COMMENT 3");
-		commentTable.setArticle(article);//commentTable1.setArticle(article);//commentTable2.setArticle(article2);
-		Set<CommentTable> commentTables = new HashSet<CommentTable>();
-		Set<CommentTable> commentTables1 = new HashSet<CommentTable>();
-		commentTables.add(commentTable);commentTables.add(commentTable1);
-		commentTables1.add(commentTable2);
+		Comment comment = new Comment("TEST COMMENT 1");
+		Comment comment1 = new Comment("TEST COMMENT 2");
+		Comment comment2 = new Comment("TEST COMMENT 3");
+		comment.setArticle(article);
+		comment1.setArticle(article);
+		comment.setUser(adminUser);
+		comment1.setUser(adminUser);
+		 //commentTable1.setArticle(article);//commentTable2.setArticle(article2);
+		Set<Comment> comments = new HashSet<Comment>();
+		Set<Comment> commentTables1 = new HashSet<Comment>();
+		comments.add(comment);
+		comments.add(comment1);
+		commentTables1.add(comment2);
 
-		article.setCommentTables(commentTables);
-		article1.setCommentTables(commentTables1);
+		article.setComments(comments);
+		article.setImgurl("/Public/adasd");
+		article1.setComments(commentTables1);
 
 		Topic topic1 = new Topic();
 		Topic topic2 = new Topic();
@@ -123,7 +128,9 @@ public class DataBaseInitializer
 		articles.add(article);
 	//	articles.add(article1);
 	//	articles1.add(article2);
+
 		adminUser.setArticles(articles);
+		adminUser.setComments(comments);
 	//	user.setArticles(articles1);
 		//adminUser.getArticles().add(article);
 		//this.articleDao.save(article);

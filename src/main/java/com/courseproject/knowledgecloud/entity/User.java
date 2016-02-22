@@ -36,6 +36,12 @@ public class User implements Entity, UserDetails, Serializable
 	@Column(unique = false, length = 16, nullable = false)
 	private String theme;
 
+	@Column(unique = false, nullable = true)
+	private String fullname;
+
+	@Column(unique = false, nullable = true)
+	private String avatar;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> roles = new HashSet<String>();
 
@@ -46,9 +52,11 @@ public class User implements Entity, UserDetails, Serializable
 					nullable = false, updatable = false) })
 	private Set<Badge> badges = new HashSet<Badge>(0);
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")//(fetch = FetchType.LAZY, mappedBy = "user")
-	//@JoinColumn(name = "ARTICLE_ID")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Article> articles = new HashSet<Article>(0);
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private Set<Comment> comments = new HashSet<Comment>(0);
 
 	public User()
 	{
@@ -206,5 +214,14 @@ public class User implements Entity, UserDetails, Serializable
 
 	public void setTheme(String theme) {
 		this.theme = theme;
+	}
+
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
 	}
 }

@@ -82,11 +82,6 @@ public class UserResource
 				new UsernamePasswordAuthenticationToken(username, password);
 		Authentication authentication = this.authManager.authenticate(authenticationToken);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		/*
-		 * Reload user as password of authentication principal will be null after authorization and
-		 * password is needed for token generation
-		 */
 		UserDetails userDetails = this.userService.loadUserByUsername(username);
 		this.currentUser = username;
 		return new TokenTransfer(TokenUtils.createToken(userDetails));
@@ -103,7 +98,6 @@ public class UserResource
 
 		User userUser = new User(username, passwordEncoder.encode(password));
 		userUser.addRole("user");
-		userUser.addRole("admin");
 		userUser.setLanguage("eng");
 		userUser.setTheme("light");
 		userDao.save(userUser);
@@ -114,14 +108,8 @@ public class UserResource
 				new UsernamePasswordAuthenticationToken(username, password);
 		Authentication authentication = this.authManager.authenticate(authenticationToken);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		/*
-		 * Reload user as password of authentication principal will be null after authorization and
-		 * password is needed for token generation
-		 */
-
 		UserDetails userDetails = this.userService.loadUserByUsername(username);
-
+		this.currentUser = username;
 		return new TokenTransfer(TokenUtils.createToken(userDetails));
 	}
 

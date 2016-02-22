@@ -2,13 +2,14 @@ package com.courseproject.knowledgecloud.entity;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -26,9 +27,10 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     private Date date;
     private Integer vote;
     private User user;
-    private Set<CommentTable> commentTables = new HashSet<CommentTable>();
+    private Set<Comment> comments = new HashSet<Comment>();
     private Set<Topic> topics = new HashSet<Topic>();
     private Set<Tag> tags = new HashSet<Tag>();
+    private String imgurl;
 
     public Article() {
     }
@@ -56,7 +58,7 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
         this.articleId = badgeId;
     }
 
-    @Column(name = "NAME", nullable = false, length = 10)
+    @Column(name = "NAME", nullable = false, length = 100)
     public String getName() {
         return this.name;
     }
@@ -66,6 +68,7 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     }
 
     @Column(name = "[CONTENT]", nullable = false)
+    @Type(type = "text")
     public String getContent() {
         return this.content;
     }
@@ -85,15 +88,13 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
 
 
     @JsonIgnore
-    //@Column(nullable = true)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "article")//(fetch = FetchType.LAZY, mappedBy = "user")
-    //@JoinColumn(name = "COMMENT_ID")
-    public Set<CommentTable> getCommentTables() {
-        return this.commentTables;
+    public Set<Comment> getComments() {
+        return this.comments;
     }
 
-    public void setCommentTables(Set<CommentTable> commentTables) {
-        this.commentTables = commentTables;
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     @JsonIgnore
@@ -110,7 +111,7 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "article_topic", joinColumns = {
-            @JoinColumn(name = "ARTICLE_ID", nullable = false, updatable = false) },
+            @JoinColumn(name = "ARTICLE_ID", nullable = false, updatable = true) },
             inverseJoinColumns = { @JoinColumn(name = "TOPIC_ID",
                     nullable = false, updatable = false) })
     public Set<Topic> getTopics(){
@@ -126,6 +127,9 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
 
     @Transient
     public List<String> tagslist;
+
+    @Transient
+    public String thisuser;// = this.user.getName();
 
     @Override
     public String toString(){
@@ -144,14 +148,24 @@ public class Article implements com.courseproject.knowledgecloud.entity.Entity, 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "article_tag", joinColumns = {
-            @JoinColumn(name = "ARTICLE_ID", nullable = false, updatable = false) },
+            @JoinColumn(name = "ARTICLE_ID", nullable = true, updatable = true) },
             inverseJoinColumns = { @JoinColumn(name = "TAG_ID",
-                    nullable = false, updatable = false) })
+                    nullable = true, updatable = true) })
     public Set<Tag> getTags() {
         return tags;
     }
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    @Column(name = "IMGURL", nullable = true)
+    @Type(type = "text")
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 }

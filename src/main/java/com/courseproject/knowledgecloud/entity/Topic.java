@@ -1,5 +1,7 @@
 package com.courseproject.knowledgecloud.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,10 +25,6 @@ public class Topic implements com.courseproject.knowledgecloud.entity.Entity {
         this.name = name;
     }
 
-//    public Topic(String name, String desc, Set<User> users) {
-//        this.name = name;
-//        this.users = users;
-//    }
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -48,7 +46,7 @@ public class Topic implements com.courseproject.knowledgecloud.entity.Entity {
         this.name = name;
     }
 
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "topics")
     public Set<Article> getArticles() {
         return this.articles;

@@ -5,14 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 
@@ -25,6 +18,7 @@ import com.courseproject.knowledgecloud.dao.topic.JpaTopicDao;
 import com.courseproject.knowledgecloud.dao.topic.TopicDao;
 import com.courseproject.knowledgecloud.dao.user.UserDao;
 import com.courseproject.knowledgecloud.entity.Article;
+import com.courseproject.knowledgecloud.entity.Comment;
 import com.courseproject.knowledgecloud.entity.Topic;
 import com.courseproject.knowledgecloud.entity.User;
 import com.owlike.genson.Genson;
@@ -61,6 +55,37 @@ public class CodeResource
     @Autowired
     private ObjectMapper mapper;
 
+
+
+
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Path("addcomment")
+//    public Comment createcomment(Comment comment)
+//    {
+//        this.logger.info("create(): " + comment);
+//        Comment comment1 = comment;
+//        return comment1;
+//        //return articleDao.assambleArticle(comment, comment.topicslist, article.tagslist);
+//    }
+
+    @Path("getuserarticles")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getuserarticles() throws JsonGenerationException, JsonMappingException, IOException{ //(@FormParam("title") String title, @FormParam("content") String content) throws IOException{
+        this.logger.info("list()");
+        ObjectWriter viewWriter;
+        if (this.isAdmin()) {
+            viewWriter = this.mapper.writerWithView(JsonViews.Admin.class);
+        } else {
+            viewWriter = this.mapper.writerWithView(JsonViews.User.class);
+        }
+        List<Article> allEntries = this.articleDao.findAllforUser();
+        String str = viewWriter.writeValueAsString(allEntries);
+        System.out.println(str);
+        return str;
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,11 +135,10 @@ public class CodeResource
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
-    public Article update(@PathParam("id") Integer id, Article newsEntry)
+    public Article update(@PathParam("id") Integer id, Article article)
     {
-        this.logger.info("update(): " + newsEntry);
-
-        return this.articleDao.save(newsEntry);
+        this.logger.info("update(): " + article);
+        return articleDao.assambleArticle(article, article.topicslist, article.tagslist);
     }
 
 

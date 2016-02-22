@@ -12,6 +12,11 @@ var app = angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.serv
 				controller: ArticleController
 			});
 
+			$routeProvider.when('/myarticles', {
+				templateUrl: 'partials/myarticles.html',
+				controller: MyarticlesController
+			});
+
 			$routeProvider.when('/profile', {
 				templateUrl: 'partials/profile.html',
 				controller: ProfileController
@@ -124,10 +129,46 @@ var app = angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.serv
 	});
 
 
-function ArticleController($scope, $rootScope, $location, $cookieStore, CodeService) {
+function ArticleController($scope, $rootScope, $location, $cookieStore, CommentService) {
 
-	$scope.articles = CodeService.query();
-	$scope.article = new CodeService();
+
+	//$scope.articles = CodeService.query();
+	$scope.article = $rootScope.showthisarticle;
+	var elem = document.createElement("img");
+	elem.src = $scope.article.imgurl;
+	document.getElementById("imgsrc").appendChild(elem);
+
+	$scope.isCurrentUser = $rootScope.user.name == $scope.article.thisuser || $rootScope.user.roles['admin'];
+	$scope.editarticle = function(){
+		$rootScope.editthisarticle = $scope.article;
+		$rootScope.isCreateNew = false;
+		$location.path("/create");
+	};
+	//$scope.deletearticle = function(){
+	//	//$rootScope.editthisarticle = $scope.article;
+	//	//$rootScope.isCreateNew = false;
+	//	$scope.article.$delete();
+	//	$location.path("/");
+	//};
+	$scope.comment = new CommentService();
+	$scope.comment.articleId = $scope.article.articleId;
+	$scope.comments = CommentService.getcomments($scope.comment);
+
+
+
+	$scope.savecomment = function(){
+
+
+		$scope.comment.username = $rootScope.user.name;
+		$scope.comment.articleId = $scope.article.articleId;
+		//$scope.comment.date = null;$.param({articleId: $scope.article.articleId, content: $scope.comment.content})
+		CommentService.getMethod($scope.comment,function() {
+			$scope.comments = CommentService.getcomments($scope.comment);
+			//$location.path('/');
+			//$scope.comments = CommentService.getcomments({articleId:$scope.article.articleId});
+		});
+	};
+
 
 
 };
@@ -136,21 +177,72 @@ function ProfileController($scope, $rootScope, $location, $cookieStore, CodeServ
 
 };
 
-function CreateController($scope, $rootScope, $location, $cookieStore, CodeService) {
-	$scope.article = new CodeService();
+function MyarticlesController($scope, $rootScope, $location, ArtService) {
+	$scope.articles = ArtService.query();
+	$scope.article = new ArtService();
+
+};
+function CreateController($scope, $rootScope, $location, $cookieStore, CodeService, TopicService) {
+
+	//$scope.article = $rootScope.showthisarticle;
+	$scope.topics = TopicService.query();
+
+	if($rootScope.isCreateNew == false){
+		$scope.article = $rootScope.editthisarticle;
+		$rootScope.isCreateNew = true;
+	}
+	else{
+		$scope.article = new CodeService();
+	}
+
+
+
+
+	$scope.loadImage = function(){
+		imageLoader = document.getElementById('imageLoader');
+		imageLoader.addEventListener('change', function(e) {
+			var reader;
+			reader = new FileReader;
+			reader.onload = function(event) {
+				var img;
+				img = new Image;
+				img.src = event.target.result;
+				$scope.imgSrc = img.src;
+				var elem = document.createElement("img");
+				elem.src = $scope.imgSrc;
+				document.getElementById("imgDiv").appendChild(elem);
+			};
+
+			reader.readAsDataURL(e.target.files[0]);
+
+		}, false);
+
+
+	};
+
 	$scope.saveart = function() {
-		debugger;
+		$scope.selectedtopics = [];
+		checkboxes = document.getElementById("topicsgroup").getElementsByTagName("input");
+		for(var i = 0; i < checkboxes.length; i++){
+			if(checkboxes[i].checked == true){
+				$scope.selectedtopics.push(i);
+			}
+		};
 		delete $scope.article.id;
 		var topics = new Array();
-		topics.push($scope.article.topics);
+		for(var i = 0; i < $scope.selectedtopics.length; i++){
+			topics.push($scope.topics[$scope.selectedtopics[i]].name);
+		};
+		//topics.push($scope.article.topics);
 		var tags = new Array();
 		tags.push($scope.article.tags);
 		//delete $scope.article.topics;
 		$scope.article.topicslist = topics;
 		$scope.article.tagslist = tags;
+		//$scope.article.imgurl = $scope.imgurl;
 		$scope.article.$save(function() {
 			$location.path('/');
-			$scope.codes = CodeService.query();
+			$scope.articles = CodeService.query();
 		});
 	};
 
@@ -189,168 +281,47 @@ function LoginController($scope, $rootScope, $location, $cookieStore, UserServic
 	};
 };
 
-function IndexController($scope, $rootScope, $location, CodeService) {
+function IndexController($scope, $rootScope, $location, CodeService, ArtService) {
+	$scope.showmyarts = function(){
+		$scope.articles = ArtService.query();
+		//$location.path("/myarticles");
+		//$scope.articles = CodeService.query();
+		//$scope.article = new CodeService();
+		//
+		//titleT = "testpost title";
+		//contentT = "testpost content";
+		//CodeService.getuserarticles($.param({title: titleT, content: contentT}), function() {
+        //
+        //
+		//	//$scope.articles = CodeService.query();
+		//	//CodeService.get(function(str) {
+		//	//	$rootScope.str = str;
+		//	//	$location.path("/");
+		//	//});
+		//});
+	}
 	$scope.articles = CodeService.query();
+	//$scope.articles = temparticles;
+
 	$scope.article = new CodeService();
 
-	$scope.showArt = function () {
+	$scope.press = function () {
+		for (index = 0; index < $scope.articles.length; ++index) {
+			console.log($scope.articles[index]);
+		//	alert($scope.articles[index].tagslist + " " + $scope.articles[index].topicslist);
+		}
+
+	}
+
+
+	$scope.showArt = function (article) {
+		$rootScope.showthisarticle = article;
 		$location.path("/article");
-	};
 
-	//$scope.code.userId = $rootScope.user.name;
-	//$scope.code.content = $scope.codeInput;
-	$scope.save = function(codeTitle) {
-		delete $scope.code.id;
-		$scope.code.$save(function() {
-			$location.path('/');
-			$scope.codes = CodeService.query();
-		});
-	};
-	$scope.deleteEntry = function(code) {
-		code.$remove(function() {
-			$scope.codes = CodeService.query();
-		});
-	};
-	$scope.editEntry = function(code){
-		$scope.code.content = code.content;
-	};
-	$scope.saveEntry = function(code) {
-		$scope.code.userId = code.userId;
-		$scope.code.title = code.title;
-		$scope.code.id = code.id;
-		$scope.code.$save(function() {
-			$location.path('/');
-			$scope.codes = CodeService.query();
-		});
 	};
 
 
-	//+++++++++++++++++++
-
-//	$scope.memory = new Array(100);
-//	for(var i = 0; i < 100; i++){
-//		$scope.memory[i] = 0;
-//	}
-//
-//	Commands = {};
-//	Commands["+"] = function(){$scope.memory[$scope.memoryPointer]++;}
-//	Commands["-"] = function(){$scope.memory[$scope.memoryPointer]--;}
-//	Commands[">"] = function(){
-//		if($scope.memory.length <= $scope.memoryPointer+1){
-//			$scope.memory.push(0);
-//		};
-//		$scope.memoryPointer++;
-//	};
-//	Commands["<"] = function(){$scope.memoryPointer--;}
-//	Commands["["] = function(){$scope.loopstack.push($scope.stringPointer);}
-//	Commands["]"] = function(){
-//		if($scope.memory[$scope.memoryPointer] > 0){
-//			$scope.loop()
-//		}else {
-//			$scope.loopstack.pop();
-//		}
-//	};
-//	Commands["."] = function(){
-//		var char = String.fromCharCode($scope.memory[$scope.memoryPointer]);
-//		$scope.standardOutput.push(char);
-//	}
-//	Commands[','] = function() {
-//		var input = "";
-//		while (input.length == 0) {
-//			input = prompt("enter one character for input");
-//		}
-//
-//		var value = input.charCodeAt(0);
-//		$scope.standardInput.push(input.charAt(0));
-//		$scope.memory[$scope.memoryPointer] = value;
-//	}
-//	Commands["#"] = function(){
-//		$scope.breakpoint = true;
-//	}
-//	$scope.breakpoint = false;
-//	$scope.standardInput = [];
-//	$scope.standardOutput = [];
-//	$scope.loop = function(){
-//		$scope.stringPointer = $scope.loopstack[$scope.loopstack.length - 1];
-//	};
-//	$scope.reset = function(){
-//		for(var i = 0; i < 100; i++){
-//			$scope.memory[i] = 0;
-//		}
-//		$scope.standardInput = [];
-//		$scope.standardOutput = [];
-//		$scope.memoryPointer = 0;
-//		$scope.stringPointer = 0;
-//		$scope.loopstack = [];
-//	};
-//	$scope.reset();
-//	$scope.runapp = function(){
-//		if($scope.code.content[$scope.stringPointer-1] == "#"){$scope.breakpoint = false;}
-//		while (($scope.stringPointer < $scope.code.content.length)&&($scope.breakpoint == false)){
-//			$scope.nextstep();
-//		};
-//	}
-//	$scope.nextstep = function(){
-//		if($scope.stringPointer < $scope.code.content.length){
-//			Commands[$scope.code.content[$scope.stringPointer]].call();
-//			$scope.stringPointer++;
-//		};
-//	};
-//
 };
-
-
-//app.controller('brainfuckCtrl', function($scope){
-//	Commands = {};
-//	Commands["+"] = function(){$scope.memoryM[$scope.memoryPointer]++;}
-//	Commands["-"] = function(){$scope.memoryM[$scope.memoryPointer]--;}
-//	Commands[">"] = function(){
-//		if($scope.memoryM.length <= $scope.memoryPointer+1){
-//			$scope.memoryM.push(0);
-//		};
-//		$scope.memoryPointer++;
-//	};
-//	Commands["<"] = function(){$scope.memoryPointer--;}
-//	Commands["["] = function(){$scope.loopstack.push($scope.stringPointer);}
-//	Commands["]"] = function(){
-//		if($scope.memoryM[$scope.memoryPointer] > 0){
-//			$scope.loop()
-//		}else {
-//			$scope.loopstack.pop();
-//		}
-//	};
-//	Commands["."] = function(){
-//		var char = String.fromCharCode($scope.memoryM[$scope.memoryPointer]);
-//		$scope.output += char + " ";
-//	}
-//	$scope.loop = function(){
-//		$scope.stringPointer = $scope.loopstack[$scope.loopstack.length - 1];
-//	};
-//	$scope.reset = function(){
-//		$scope.memoryM = new Array(100);
-//		for(var i = 0; i < 100; i++){
-//			$scope.memoryM[i] = 0;
-//		}
-//		//$scope.memoryM[0] = 0;
-//		$scope.output = "";
-//		$scope.memoryPointer = 0;
-//		$scope.stringPointer = 0;
-//		$scope.loopstack = [];
-//	};
-//	$scope.reset();
-//	$scope.run = function(){
-//
-//		while ($scope.stringPointer < $scope.codeInput.length){
-//			$scope.nextstep();
-//		};
-//	}
-//	$scope.nextstep = function(){
-//		if($scope.stringPointer < $scope.codeInput.length){
-//			Commands[$scope.codeInput[$scope.stringPointer]].call();
-//			$scope.stringPointer++;
-//		};
-//	};
-//});
 
 var services = angular.module('exampleApp.services', ['ngResource']);
 
@@ -374,15 +345,67 @@ services.factory('UserService', function($resource) {
 
 services.factory('CodeService', function($resource) {
 
-	return $resource('rest/news/:id', {id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist", tagslist: "@tagslist"});
+	return $resource('rest/news/:id', {
+				id: '@articleId',
+				title: '@name',
+				content: '@content',
+				topicslist: "@topicslist",
+				tagslist: "@tagslist",
+				thisuser: "@thisuser",
+				date: "@date",
+				vote: "@vote",
+				imgurl: "@imgurl"});
+});
+services.factory('ArtService', function($resource) {
+
+	return $resource('rest/news/getuserarticles',
+		{
+			id: '@articleId',
+			title: '@name',
+			content: '@content',
+			topicslist: "@topicslist",
+			tagslist: "@tagslist",
+			thisuser: "@thisuser",
+			date: "@date",
+			vote: "@vote",
+			imgurl: "@imgurl"});
 });
 
+services.factory('CommentService', function($resource) {
+
+	return $resource('rest/comments/:action', {
+		id: '@commentId',
+		username: "@username",
+		articleId: "@articleId",
+		content: "@content"
+	}, {
+			getcomments:{
+				params: {'action' : 'getcomments'},
+				method : 'POST' ,
+				isArray:true
+			},
+		   	getMethod:{
+				params: {'action' : 'getMethod'},
+				method:'POST'
+			//isArray:true
+		}
+
+	}
+		);
+});
+
+services.factory('TopicService', function($resource) {
+
+	return $resource('rest/topics/', {
+			id: "@id",
+			name: "@name"});
+});
 
 //services.factory('CodeService', function($resource) {
 //
-//	return $resource('rest/news/:id', {
+//	return $resource('rest/news/:action',{}, {
 //			getallarticles:{id: '@articleId', title: '@name',content: '@content', topicslist: "@topicslist", tagslist: "@tagslist"},
-//			getuserarticles:{method:'POST',patams: {'action' : 'getuserarticles'}}
+//			getuserarticles:{method:'POST',params: {'action' : 'getuserarticles'}}
 //
 //	});
 //});

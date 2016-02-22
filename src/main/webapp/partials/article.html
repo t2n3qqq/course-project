@@ -1,30 +1,55 @@
+<div class="container">
+    <div class="col-lg-8">
+                    <div class="post_box">
+                        <h2><a>{{article.name}}</a></h2>
+                        <div class="news_meta">Posted by <a href="#">{{article.thisuser}}</a>, Posted on <a href="#">{{article.topicslist}}</a>, {{article.date | date}} | Tags: <a href="#">{{article.tagslist}}</a></div>
+                        <div class="image_wrapper"><a href="http://www.templatemo.com/page/1" target="_parent"><div id="imgsrc"></div></a></div>
+                        <p align="justify">{{article.content}}</p>
+                        <div class="cleaner"></div>
+                    </div>
+                <!--</div>-->
+            <!--</div>-->
+            <div class="cleaner"></div>
 
-<div class="container-fluid">
-    <div class="row" >
-        <div class="col-md-3">
 
-            <p>THIS IS ARTICLE PAGE</p>
-            <div ng-repeat="article in articles">
-
-                <hr />
-                <p>ALERT</p>
-                <p>{{article.name}}</p>
-                <h4>{{article.content}}</h4>
+        <button type="submit" class="btn btn-primary" ng-click="editarticle()" ng-show="isCurrentUser"><span class="fa fa-check"></span> Edit</button>
+        <button type="submit" class="btn btn-primary" ng-click="deletearticle()" ng-show="isCurrentUser"><span class="fa fa-check"></span> Delete</button>
+        <button type="submit" class="btn btn-primary" ng-click="" ng-show="user.roles['admin']"><span class="fa fa-check"></span> ADMIN</button>
 
 
+        <!-- Blog Comments -->
+
+            <!-- Comments Form -->
+            <hr>
+
+            <div class="well">
+                <h4>Leave a Comment:</h4>
+                <form role="form">
+                    <div class="form-group">
+                        <textarea ng-model="comment.content" class="form-control" rows="3" style="resize:none;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-click = "savecomment()">Submit</button>
+                </form>
             </div>
 
+            <hr>
+        <!-- Posted Comments -->
 
+        <!-- Comment -->
+        <div class="media" ng-repeat = "comment in comments | orderBy:'date'">
+            <a class="pull-left" href="#">
+                <img class="media-object" src="http://placehold.it/64x64" alt="">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">{{comment.username}}
+                    <small>{{comment.date | date}}</small>
+                </h4>
+                {{comment.content}}
+            </div>
         </div>
 
+        <hr>
 
-
-
-
-    </div>
-
+        </div>
 </div>
 
-
-
-<hr />

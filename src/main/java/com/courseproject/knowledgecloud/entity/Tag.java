@@ -24,10 +24,6 @@ public class Tag implements com.courseproject.knowledgecloud.entity.Entity{
         this.name = name;
     }
 
-//    public Topic(String name, String desc, Set<User> users) {
-//        this.name = name;
-//        this.users = users;
-//    }
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

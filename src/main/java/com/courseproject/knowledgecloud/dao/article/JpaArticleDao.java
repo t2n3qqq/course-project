@@ -29,20 +29,22 @@ import java.util.*;
 /**
  * Created by qqq on 2/11/2016.
  */
-public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDao{
-    JpaArticleDao(){super(Article.class);}
+public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDao {
+    JpaArticleDao() {
+        super(Article.class);
+    }
 
     @Override
-    @Transactional//(readOnly = true)
-    public Article assambleArticle(Article article, List<String> topicslist, List<String> tagslist){
+    @Transactional
+    public Article assambleArticle(Article article, List<String> topicslist, List<String> tagslist) {
 
         Set<Topic> topics = new HashSet<Topic>();
-        for(String topic : topicslist){
+        for (String topic : topicslist) {
             Topic newtopic = DataBaseInitializer.topicDao.findByName(topic);
             topics.add(newtopic);
         }
         Set<Tag> tags = new HashSet<Tag>();
-        for(String tag : tagslist){
+        for (String tag : tagslist) {
             Tag newtag = DataBaseInitializer.tagDao.findByName(tag);
             tags.add(newtag);
         }
@@ -58,7 +60,7 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
 
     @Override
     @Transactional(readOnly = true)
-    public List<Article> findAll(){
+    public List<Article> findAll() {
         final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
         final CriteriaQuery<Article> criteriaQuery = builder.createQuery(Article.class);
 
@@ -67,70 +69,42 @@ public class JpaArticleDao extends JpaDao<Article, Integer> implements ArticleDa
         criteriaQuery.orderBy(builder.desc(root.get("date")));
 
         TypedQuery<Article> typedQuery = this.getEntityManager().createQuery(criteriaQuery);
+        List<Article> articles = typedQuery.getResultList();
+        for (Article art : articles) {
+            art.topicslist = new ArrayList<String>();
+            art.tagslist = new ArrayList<String>();
+            for (Topic top : art.getTopics()) {
+                art.topicslist.add(top.getName());
+            }
+            for (Tag tag : art.getTags()) {
+                art.tagslist.add(tag.getName());
+            }
+            art.thisuser = art.getUser().getName();
+
+        }
         return typedQuery.getResultList();
     }
 
 
-
     @Override
     @Transactional(readOnly = true)
-    public List<Article> findAllforUser(){
-       // final CriteriaBuilder builder = this.getEntityManager().getCriteriaBuilder();
-        //final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-
+    public List<Article> findAllforUser() {
         User user = DataBaseInitializer.userDao.findByName(UserResource.currentUser);
-
         List<Article> articles = new ArrayList<Article>();
         articles.addAll(user.getArticles());
+        for (Article art : articles) {
+            art.topicslist = new ArrayList<String>();
+            art.tagslist = new ArrayList<String>();
+            for (Topic top : art.getTopics()) {
+                art.topicslist.add(top.getName());
+            }
+            for (Tag tag : art.getTags()) {
+                art.tagslist.add(tag.getName());
+            }
+            art.thisuser = art.getUser().getName();
+
+        }
 
         return articles;
-
-
-//        User user;
-//        Session session = this.getEntityManager().unwrap(Session.class);
-//        session.getSessionFactory().openSession();
-//        //User.class.getClass().getPackage().getName();
-//        user =  (User) session.get(User.class, 1);
-//        System.out.println(user.getName());
-//        List<Article> articles = new ArrayList<Article>();
-//        articles.addAll(user.getArticles());
-//
-//        return articles;
-
-//        Session session = this.getEntityManager().unwrap(Session.class);
-//        session.getSessionFactory().openSession();
-//        Criteria cr = session.createCriteria(User.class).add(Restrictions.eq("name", "admin"))
-//                .setProjection(Projections.projectionList()
-//                        .add(Projections.property("id"), "id"))
-//                        //.add(Projections.property("name"), "name"))
-//                .setResultTransformer(Transformers.aliasToBean(User.class));
-//
-//        List<User> list = cr.list();
-//        Integer userId = list.get(0).getId();
-//
-//        cr = session.createCriteria(Article.class).add(Restrictions.eq("user", 1))
-//                .setProjection(Projections.projectionList()
-//                        .add(Projections.property("articleId"), "articleId")
-//                        .add(Projections.property("name"), "name"))
-//                .setResultTransformer(Transformers.aliasToBean(Article.class));
-//
-//        List<Article> articles = cr.list();
-
-
-//        Root<User> root = criteriaQuery.from(User.class);
-//        UserTransfer userTransfer;
-//        UserResource userResource = new UserResource();
-//        //userResource.getUser();
-//        userTransfer = userResource.getUser();
-//        //System.out.println(userTransfer.getName());
-//        //criteriaQuery.multiselect(User)
-//        criteriaQuery.select(root).where(builder.equal(root.get("name"), userTransfer.getName()));
-//        //criteriaQuery.orderBy(builder.desc(root.get("date")));
-//
-//        TypedQuery<User> typedQuery = this.getEntityManager().createQuery(criteriaQuery);
-//        List<User> us = new ArrayList<User>();
-//        us = typedQuery.getResultList();
-//        List<Article> ar = new ArrayList<Article>();
-//        return ar; //typedQuery.getResultList();
     }
 }
